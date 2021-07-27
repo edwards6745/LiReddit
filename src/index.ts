@@ -13,6 +13,7 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import expressPlayground from "graphql-playground-middleware-express";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
@@ -52,18 +53,12 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
     context: ({ req, res }) => ({ em: orm.em, req, res }),
   });
 
   await apolloServer.start();
   apolloServer.applyMiddleware({ app });
-
-  app.get(
-    "/playground",
-    expressPlayground({
-      endpoint: "graphql/</script><script>alert(1)</script><script>",
-    })
-  );
 
   app.listen(4000, () => {
     console.log("server started on localhost:4000");
