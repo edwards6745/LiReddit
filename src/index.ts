@@ -11,8 +11,6 @@ import { UserResolver } from "./resolvers/user";
 import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import cors from "cors";
-import expressPlayground from "graphql-playground-middleware-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 const main = async () => {
@@ -23,12 +21,8 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
-  const options: cors.CorsOptions = {
-    origin: ["http://studio.apollographql.com"],
-  };
 
   app.use(
-    cors(options),
     session({
       name: "qid",
       store: new RedisStore({
@@ -44,8 +38,7 @@ const main = async () => {
       saveUninitialized: false,
       secret: "qowiueojwojfalksdjoqiwueo",
       resave: false,
-    }),
-    express.json()
+    })
   );
 
   const apolloServer = new ApolloServer({
