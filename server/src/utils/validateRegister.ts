@@ -1,7 +1,8 @@
+import { REGEXP } from "../constants";
 import { UsernamePasswordInput } from "src/resolvers/UsernamePasswordInput";
 
 export const validateRegister = (options: UsernamePasswordInput) => {
-  if (!options.email.includes("@")) {
+  if (!REGEXP.test(options.email)) {
     return [
       {
         field: "email",
