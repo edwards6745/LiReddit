@@ -9,14 +9,12 @@ import { useState } from "react";
 
 const Index = () => {
   const [variables, setVariables] = useState({
-    limit: 10,
+    limit: 20,
     cursor: null as null | string,
   });
   const [{ data, fetching, ...other }] = usePostsQuery({
     variables,
   });
-
-  console.log(fetching, other);
 
   if (!fetching && !data) {
     return <div>Query failed. No Posts</div>;
@@ -39,9 +37,9 @@ const Index = () => {
             // <div key={p.id}>{p.title}</div>
             <Box p={p.id} shadow="md" borderWidth="1px" padding={4}>
               <Heading fontSize="xl">{p.title}</Heading>
-              <Box ml="auto" fontSize={13}>
-                username
-              </Box>
+              <Text ml="auto" fontSize={13}>
+                posted by {p.creator.username}
+              </Text>
               <Text mt={4}>{p.textSnippet}</Text>
             </Box>
           ))}

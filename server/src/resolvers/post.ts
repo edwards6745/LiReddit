@@ -40,6 +40,37 @@ export class PostResolver {
     return root.text.slice(0, 50);
   }
 
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async vote(
+    @Arg("postId", () => Int) postId: number,
+    @Arg("value", () => Int) value: number,
+    @Ctx() { req }: MyContext
+  ) {
+    const isUpvote = value !== -1;
+    const realValue = isUpvote ? 1 : -1;
+    const { userId } = req.session;
+    // await Upvote.insert({
+    //   userId,
+    //   postId,
+    //   value: realValue,
+    // });
+
+    getConnection().query(
+      `
+      START TRANSACTION;
+      insert into upvote ("userId", "postId", value)
+      values (${userId}, ${postId}, ${realValue});
+      update post
+      set points = points + ${realValue}
+      where id = ${postId};
+      COMMIT;
+    `
+    );
+
+    return true;
+  }
+
   @Query(() => PaginatedPosts)
   async posts(
     @Arg("limit", () => Int) limit: number,
@@ -73,12 +104,12 @@ export class PostResolver {
       replacements
     );
 
-    const qb = getConnection()
-      .getRepository(Post)
-      .createQueryBuilder("p")
-      .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-      .orderBy('p."createdAt"', "DESC")
-      .take(realLimitPlusOne);
+    // const qb = getConnection()
+    //   .getRepository(Post)
+    //   .createQueryBuilder("p")
+    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
+    //   .orderBy('p."createdAt"', "DESC")
+    //   .take(realLimitPlusOne);
 
     // if (cursor) {
     //   qb.where('p."createdAt" < :cursor', {
