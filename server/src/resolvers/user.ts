@@ -222,7 +222,6 @@ export class UserResolver {
     return new Promise((resolve) =>
       req.session.destroy((err) => {
         if (err) {
-          console.log(err);
           resolve(false);
           return;
         }

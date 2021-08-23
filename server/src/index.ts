@@ -24,9 +24,13 @@ const main = async () => {
     password: "postgres",
     logging: true,
     synchronize: true,
-    migrations: [path.join(__dirname, "./migrations/*")],
+    migrations: [path.join(__dirname, "../migrations/*")],
     entities: [Post, User],
   });
+
+  await conn.runMigrations();
+
+  //await Post.delete({});
 
   const app = express();
 
