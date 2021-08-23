@@ -34,11 +34,14 @@ const Index = () => {
       {!data && fetching ? (
         <div>Loading...</div>
       ) : (
-        <Stack spacing={8}>
+        <Stack spacing={6} mb={2}>
           {data!.posts.posts.map((p) => (
             // <div key={p.id}>{p.title}</div>
             <Box p={p.id} shadow="md" borderWidth="1px" padding={4}>
               <Heading fontSize="xl">{p.title}</Heading>
+              <Box ml="auto" fontSize={13}>
+                username
+              </Box>
               <Text mt={4}>{p.textSnippet}</Text>
             </Box>
           ))}
