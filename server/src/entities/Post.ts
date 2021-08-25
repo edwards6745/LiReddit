@@ -50,6 +50,8 @@ export class Post extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts)
   creator: User;
 
-  @OneToMany(() => Upvote, (upvote) => upvote.post)
+  @OneToMany(() => Upvote, (upvote) => upvote.post, {
+    cascade: true,
+  })
   upvotes: Upvote[];
 }
